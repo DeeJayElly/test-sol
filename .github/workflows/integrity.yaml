@@ -1,0 +1,16 @@
+name: integrity
+
+on:
+  push:
+
+jobs:
+  check-integrity:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: run checksum.sh
+        run: ./checksum.sh

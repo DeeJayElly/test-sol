@@ -1,0 +1,21 @@
+name: 01_delegation
+
+on:
+  push:
+
+jobs:
+  moulinette:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: install foundry
+        uses: onbjerg/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: run moulinette
+        run: forge script ./script/Setup.constant.01.sol -vvv --sig "run(bytes)" $(openssl rand -hex 6400)

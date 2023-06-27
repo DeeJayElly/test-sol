@@ -1,0 +1,8 @@
+{
+  "name": "test.sol",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:kilnfi/test.sol.git",
+  "author": "Iulian Rotaru <iulian@rotaru.fr>",
+  "license": "MIT"
+}

@@ -1,0 +1,21 @@
+name: 02_pack 
+
+on:
+  push:
+
+jobs:
+  moulinette:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: install foundry
+        uses: onbjerg/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: run moulinette
+        run: forge script ./script/Setup.constant.02.sol -vvv --sig "run(bytes32)" 0x$(openssl rand -hex 32)
