@@ -3,22 +3,28 @@ pragma solidity 0.8.16;
 
 import "forge-std/Script.sol";
 
-import "./ICounter.constant.sol";
-
-contract Exercise is ICounter {
-    ICounter private counterImplementation;
+contract Exercise {
+    address public implementation;
 
     function setCounter(address _counter) external {
-        counterImplementation = ICounter(_counter);
+        implementation = _counter;
     }
 
-    function inc() override external {
-        require(address(counterImplementation) != address(0), "Counter implementation address not set");
-        counterImplementation.inc();
+    fallback() external {
+        _delegate(implementation);
     }
 
-    function counter() override external returns (uint256) {
-        require(address(counterImplementation) != address(0), "Counter implementation address not set");
-        return counterImplementation.counter();
+    function _delegate(address _impl) internal {
+        assembly {
+            let ptr := mload(0x40)
+            calldatacopy(ptr, 0, calldatasize())
+            let result := delegatecall(gas(), _impl, ptr, calldatasize(), 0, 0)
+            let size := returndatasize()
+            returndatacopy(ptr, 0, size)
+
+            switch result
+            case 0 { revert(ptr, size) }
+            default { return(ptr, size) }
+        }
     }
 }
